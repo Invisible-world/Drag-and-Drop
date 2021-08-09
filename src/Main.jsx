@@ -1,42 +1,13 @@
-import React, { useState } from 'react'
-import Column from './Components/Column'
-import { DragDropContext } from 'react-beautiful-dnd'
+import React,{useContext,useState} from 'react'
+import Column   from './Components/Column';
+import {DragDropContext} from 'react-beautiful-dnd'
+import { GlobalContext } from './Globalstate';
 
-function App () {
-  const initialColumns = {
-    Task: {
-      id: 'Task',
-      list: ['item 1', 'item 2', 'item 3']
-    },
-    InProgress: {
-      id: 'InProgress',
-      list: []
-    },
-    Completed: {
-      id: 'Completed',
-      list: []
-    }
-  }
-  const [columns, setColumns] = useState(initialColumns)
-  const [arr,setArr]=useState([])
-  const handleDelete= (text,index) => {
-    const term = Object.values(columns)
-     .filter(item=>item.list[index] === text)
-       
-      const filteredterm=term.map(ter=>
-    //  console.log(ter.list[index])
-      ter.list
-
-    )
-    const finalone=filteredterm.filter(trm=>trm.index !== index)
-    setArr(filteredterm)
-    console.log(term)
-    console.log(arr)
-    console.log(filteredterm)
-    console.log(finalone)
-  }
-  
+export default function Main() {
+    const { initialState}=useContext(GlobalContext)
+  const [columns, setColumns] = useState(initialState)
    
+
   const onDragEnd = ({ source, destination }) => {
     // Make sure we have a valid destination
     if (destination === undefined || destination === null) return null
@@ -50,6 +21,7 @@ function App () {
 
     // Set start and end variables
     const start = columns[source.droppableId]
+    console.log(start)
     const end = columns[destination.droppableId]
 
     // If start is the same as end, we're in the same column
@@ -105,22 +77,31 @@ function App () {
       }))
       return null
     }
+  
+  
   }
-
-  return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div style={{display: 'grid',
-  gridTemplateColumns: '1fr 1fr 1fr',
-  margin: '10vh auto',
-  width: '80%',
-  height: '80vh',
-  gap: '8px'}}>
+  
+    // console.log(initialColumns)
+    
+    return (
+        <div>
+            <DragDropContext onDragEnd={onDragEnd}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 1fr 1fr',
+        margin: '10vh auto',
+        width: '80%',
+        height: '80vh',
+        gap: '8px'
+      }}>
         {Object.values(columns).map(col => (
-          <Column col={col} key={col.id} handleDelete={handleDelete} />
+          <>
+          <Column col={col} key={col.id} />
+          
+          </>
         ))}
       </div>
     </DragDropContext>
-  )
+        </div>
+    )
 }
-
-export default App
